@@ -17,25 +17,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-
-await Users.sync();
-await RequestCuti.sync();
-await HistoryCuti.sync();
-await Role.sync();
-
 const server = http.createServer(app);
 
-export const io = new Server(server, {
+// Inisialisasi Socket.io
+const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
+// Socket.io connection handler
 io.on("connection", (socket) => {
   console.log("✅ User connected:", socket.id);
 
@@ -49,17 +41,48 @@ io.on("connection", (socket) => {
   });
 });
 
-const v1 = "/api/v1";
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
+// Routes
+const v1 = "/api/v1";
 app.use(v1, authRouter);
 app.use(v1, reqCutiRouter);
 app.use(v1, historyCutiRouter);
 
 app.get("/", (req, res) => res.send("Server is running!"));
 
-const PORT = process.env.PORT || 5000;
+// Fungsi untuk inisialisasi server
+async function initializeServer() {
+  try {
+    // Sync database
+    await Users.sync();
+    await RequestCuti.sync();
+    await HistoryCuti.sync();
+    await Role.sync();
+    console.log("✅ Database synced successfully");
 
-await sequelize.authenticate();
-console.log("✅ DB connected successfully");
+    // Test database connection
+    await sequelize.authenticate();
+    console.log("✅ DB connected successfully");
 
-server.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+    // Start server
+    const PORT = process.env.PORT || 5000;
+    server.listen(PORT, () => {
+      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`✅ Socket.io initialized`);
+    });
+  } catch (error) {
+    console.error("❌ Server initialization failed:", error);
+    process.exit(1);
+  }
+}
+
+// Export yang diperlukan
+export { app, server, io };
+
+// Jalankan server
+initializeServer();
