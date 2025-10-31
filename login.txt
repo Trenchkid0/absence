@@ -1,0 +1,10 @@
+    "username":"gm1",
+    "password": "gm_pass123"
+
+
+    "username":"employee1",
+    "password": "emp_pass123"
+
+
+    "username":"head1",
+    "password": "head_pass123"
