@@ -92,16 +92,12 @@ export default function RequestList({ data, role }) {
                 </td>
                 <td className="border p-2 text-center">
                   {roleID === 1 ? (
-                    req.status === "revision" ? (
-                      <Link
-                        to={`/request/${req.id}`}
-                        className="text-blue-600 underline"
-                      >
-                        Lihat
-                      </Link>
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )
+                    <Link
+                      to={`/request/?id=${req.id}`}
+                      className="text-blue-600 underline"
+                    >
+                      Lihat
+                    </Link>
                   ) : roleID === 2 || roleID === 3 ? (
                     <button
                       onClick={() => openDetailModal(req.id)}

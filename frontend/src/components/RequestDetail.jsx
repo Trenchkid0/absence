@@ -3,7 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { config } from "../config";
 
-export default function RequestDetail({ id, role }) {
+export default function RequestDetail({ id }) {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -19,15 +19,15 @@ export default function RequestDetail({ id, role }) {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`${config.api_host_dev}/cuti/${role}`, {
+      const res = await axios.get(`${config.api_host_dev}/cuti/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setDetail(res.data.data);
+      setDetail(res?.data?.data);
       setFormData({
-        start_date: res.data.data.start_date,
-        end_date: res.data.data.end_date,
-        leave_type: res.data.data.leave_type,
-        reason: res.data.data.reason,
+        start_date: res?.data?.data?.start_date,
+        end_date: res?.data?.data?.end_date,
+        leave_type: res?.data?.data?.leave_type,
+        reason: res?.data?.data?.reason,
         attachment: null,
       });
     } catch (err) {
@@ -36,6 +36,8 @@ export default function RequestDetail({ id, role }) {
       setLoading(false);
     }
   };
+
+  console.log(detail);
 
   useEffect(() => {
     fetchDetail();
@@ -59,7 +61,7 @@ export default function RequestDetail({ id, role }) {
     if (formData.attachment) data.append("attachment", formData.attachment);
 
     try {
-      await axios.put(`${config.api_host_dev}/cuti/revision/${role}`, data, {
+      await axios.put(`${config.api_host_dev}/cuti/revision/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -242,12 +244,14 @@ export default function RequestDetail({ id, role }) {
                 Diperbarui: {new Date(detail.updatedAt).toLocaleString("id-ID")}
               </p>
             </div>
-            <button
-              onClick={() => setIsEditing(true)}
-              className="text-blue-600 hover:underline text-sm"
-            >
-              Edit Data
-            </button>
+            {detail?.status === "revision" && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-blue-600 hover:underline text-sm"
+              >
+                Edit Data
+              </button>
+            )}
           </div>
         </>
       )}

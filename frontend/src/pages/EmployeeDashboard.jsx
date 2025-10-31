@@ -65,13 +65,11 @@ export default function EmployeeDashboard() {
 
     socket.on("disconnect", () => console.log("❌ Socket disconnected"));
 
-    // disconnect hanya saat komponen unmount
     return () => socket.disconnect();
   }, []);
 
   useEffect(() => {
     fetchRequests();
-    // fetchnotif();
   }, [page, limit]);
 
   const handleNewRequest = (newRequest) => {
@@ -112,7 +110,6 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <div className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-6 flex items-center space-x-3">
           <div className="h-8 w-8 bg-blue-600 rounded-full flex items-center justify-center">
@@ -124,10 +121,8 @@ export default function EmployeeDashboard() {
         </div>
       </div>
 
-      {/* Main */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg border shadow-sm">
-          {/* Tabs */}
           <div className="flex border-b">
             {[
               ["request", "📝 Request Leave"],
@@ -163,7 +158,6 @@ export default function EmployeeDashboard() {
               </div>
             )}
 
-            {/* Tab 2 - Summary */}
             {activeTab === "summary" && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center border-b pb-4">
@@ -176,7 +170,6 @@ export default function EmployeeDashboard() {
                     </p>
                   </div>
 
-                  {/* Limit Selector */}
                   <div className="flex items-center space-x-2">
                     <label className="text-gray-600 text-sm">
                       Show per page:
@@ -201,7 +194,6 @@ export default function EmployeeDashboard() {
                   onUpdate={handleUpdateRequest}
                 />
 
-                {/* Pagination */}
                 <div className="flex justify-center items-center space-x-2 mt-6">
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
