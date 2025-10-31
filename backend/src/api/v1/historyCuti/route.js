@@ -14,7 +14,7 @@ router.get(
 router.get(
   "/historyCuti/user/:userId",
   authenticateUser,
-  authorizeRoles(2, 3),
+  authorizeRoles(1,2, 3),
   getHistoryByUser
 );
 

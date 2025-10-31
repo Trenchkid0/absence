@@ -11,11 +11,11 @@ export default function NotificationsPage() {
   const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
 
-  const roleId = localStorage.getItem("role)id");
+  const roleId = localStorage.getItem("role_id");
   const userId = localStorage.getItem("user_id");
   const token = localStorage.getItem("token");
 
-  const role = roleId === 1 ? "employee" : "head";
+  const role = roleId === "1" ? "employee" : "head";
 
   const fetchNotifications = async () => {
     try {
